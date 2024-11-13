@@ -1,0 +1,6 @@
+.nav_btn{
+    color: white !important;
+}
+.nav_btn:hover{
+    color: teal !important;
+}
