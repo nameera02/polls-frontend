@@ -13,6 +13,7 @@ import { login } from '../../store/authSlice';
 import { Link,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
+import { userLogin } from '../../api/api';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -34,8 +35,8 @@ function Login() {
 
     try {
       // Make API call to login endpoint
-      const response = await axios.post('http://localhost:4000/api/v1/login', { email, password });
-      const token=response.data.token;
+      const response = await userLogin(email, password);
+      const token=response.token;
       if (token) {
         localStorage.setItem('token', token);
       }

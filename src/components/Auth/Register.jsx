@@ -12,6 +12,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/authSlice';
 import { useState } from 'react';
+import {userRegister } from '../../api/api';
 import axios from 'axios';
 
 function Register() {
@@ -35,12 +36,13 @@ function Register() {
     if (name && email && password) {
         try {
           // Make API call to login endpoint
-          const response = await axios.post('http://localhost:4000/api/v1/register', { name,email, password });
-          if (response.data.token) {
-            localStorage.setItem('token', response.data.token);
+          const response = await userRegister(name,email, password);
+          const token=response.token;
+          if (token) {
+            localStorage.setItem('token', token);
           }
-          dispatch(login());
-          navigate('/login');
+          dispatch(login({ token }));
+          navigate('/polls');
           // Handle successful login response
           toast({
             title: 'Registration successfull.',
@@ -49,18 +51,16 @@ function Register() {
             isClosable: true,
           });
     
-          // Handle further actions like storing token or redirecting
-          // localStorage.setItem('token', response.data.token); // If a token is returned
-          // navigate to another page or update the state for logged-in user
-    
         } catch (error) {
           // Handle errors (e.g., incorrect email or password)
           toast({
             title: error.response?.data?.message || 'Registration failed. Please try again.',
             status: 'error',
-            duration: 2000,
+            duration: 20000,
             isClosable: true,
           });
+          console.log(error);
+          
         }
       // Registration logic here (e.g., send data to backend)
     } else {

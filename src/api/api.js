@@ -10,3 +10,25 @@ export const deletePoll = async (pollId) => {
     throw error;
   }
 };
+export const userLogin = async (email, password) => {
+  try {
+   const response =await axios.post(`${API_URL}/login`, { email, password });
+   if (response.data.success) {
+    return response.data;
+  }
+  throw new Error('Login failed');
+} catch (error) {
+  throw error; // You can handle this error further up if necessary
+}
+};
+export const userRegister = async (name,email, password) => {
+  try {
+   const response =await axios.post(`${API_URL}/register`, { name,email, password });
+   if (response.data.success) {
+    return response.data;
+  }
+  throw new Error('Registrantion failed');
+} catch (error) {
+  throw error; // You can handle this error further up if necessary
+}
+};
