@@ -50,7 +50,7 @@ const PollDetailPage = () => {
         isClosable: true,
       });
       // Redirect to the results page or back to the polls list
-      navigate("/polls");  // You can change this to navigate to another page
+      // navigate("/polls");  // You can change this to navigate to another page
     } catch (error) {
       toast({
         title: 'You have already voted on this poll.',

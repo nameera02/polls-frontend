@@ -32,16 +32,13 @@ function App() {
     socket.on('disconnect', () => {
       console.log('Disconnected from server');
     });
-    socket.on('voteUpdateb', () => {
-      console.log('voteUpdateb from server');
-    });
     socket.on('voteUpdate', (data) => {
       console.log("test voteUpdate"+data);
       getPolls(); // Re-fetch the updated polls on vote update
     });
     getPolls();
     return () => {
-      socket.disconnect();
+      socket.off('voteUpdate');
     };
   }, [getPolls, socket]);
   
