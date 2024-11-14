@@ -35,11 +35,12 @@ function Login() {
     try {
       // Make API call to login endpoint
       const response = await axios.post('http://localhost:4000/api/v1/login', { email, password });
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
+      const token=response.data.token;
+      if (token) {
+        localStorage.setItem('token', token);
       }
       // Handle successful login response
-      dispatch(login());
+      dispatch(login({ token }));
       navigate('/polls');
       toast({
         title: 'Logged in successfully.',

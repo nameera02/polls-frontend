@@ -13,7 +13,9 @@ function NavBar() {
   const [userInfo, setuserInfo] = useState([]);
   const dispatch = useDispatch();
     const toast = useToast();
-    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+    const { isLoggedIn, user }  = useSelector((state) => state.auth);
+    console.log(user);
+    
   function UserMenu() {    
     const token = localStorage.getItem('token');
   
@@ -61,11 +63,10 @@ function NavBar() {
           {isLoggedIn ? (
         <Menu>
           <MenuButton as={Button} variant="ghost">
-            <Avatar name={userInfo.name} size="sm" />
+            <Avatar name={user.username} size="sm" />
           </MenuButton>
-          <MenuList>
-            <MenuItem isDisabled>{userInfo.name}</MenuItem>
-            <MenuItem isDisabled>{userInfo.email}</MenuItem>
+          <MenuList textAlign={"center"}>
+            <MenuItem isDisabled>{user.email}</MenuItem>
             <MenuItem onClick={handleLogout} color="red.500">
               Logout
             </MenuItem>
