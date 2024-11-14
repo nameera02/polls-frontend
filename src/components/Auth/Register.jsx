@@ -6,20 +6,25 @@ import {
   Input,
   Stack,
   Text,
-  Toast,
+  useToast,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/authSlice';
 import { useState } from 'react';
+import axios from 'axios';
 
 function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handleRegister = () => {
+  const toast = useToast();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleRegister = async() => {
     if (password !== confirmPassword) {
-      Toast({
+      toast({
         title: 'Passwords do not match.',
         status: 'error',
         duration: 2000,
@@ -28,15 +33,38 @@ function Register() {
       return;
     }
     if (name && email && password) {
-      Toast({
-        title: 'Registration successful.',
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
+        try {
+          // Make API call to login endpoint
+          const response = await axios.post('http://localhost:4000/api/v1/register', { name,email, password });
+          if (response.data.token) {
+            localStorage.setItem('token', response.data.token);
+          }
+          dispatch(login());
+          navigate('/login');
+          // Handle successful login response
+          toast({
+            title: 'Registration successfull.',
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+          });
+    
+          // Handle further actions like storing token or redirecting
+          // localStorage.setItem('token', response.data.token); // If a token is returned
+          // navigate to another page or update the state for logged-in user
+    
+        } catch (error) {
+          // Handle errors (e.g., incorrect email or password)
+          toast({
+            title: error.response?.data?.message || 'Registration failed. Please try again.',
+            status: 'error',
+            duration: 2000,
+            isClosable: true,
+          });
+        }
       // Registration logic here (e.g., send data to backend)
     } else {
-        Toast({
+      toast({
         title: 'Please fill in all fields.',
         status: 'error',
         duration: 2000,

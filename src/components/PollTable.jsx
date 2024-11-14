@@ -2,8 +2,9 @@ import { Box, Table, Thead, Tbody, Tr, Th, Td, Button, Image, useDisclosure,useT
 import CreatePollModal from './CreatePollModal';
 import EditPollModal from './EditPollModal';
 import { useState, } from 'react';
-import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { deletePoll } from '../api/api';
+
 
 function PollTable({ polls, getPolls }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -17,7 +18,7 @@ function PollTable({ polls, getPolls }) {
   const handleDelete = async (pollId) => {
     try {
       // Make DELETE request to your API to delete the poll and its options
-      await axios.delete(`http://localhost:4000/api/v1/poll/${pollId}`);
+      await deletePoll(pollId);
       getPolls();
       // Show success message
       toast({

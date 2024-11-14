@@ -8,7 +8,9 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/authSlice';
+import { Link,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -16,6 +18,8 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const toast = useToast();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async() => {
     if (!email || !password) {
@@ -35,16 +39,14 @@ function Login() {
         localStorage.setItem('token', response.data.token);
       }
       // Handle successful login response
+      dispatch(login());
+      navigate('/polls');
       toast({
         title: 'Logged in successfully.',
         status: 'success',
         duration: 2000,
         isClosable: true,
       });
-
-      // Handle further actions like storing token or redirecting
-      // localStorage.setItem('token', response.data.token); // If a token is returned
-      // navigate to another page or update the state for logged-in user
 
     } catch (error) {
       // Handle errors (e.g., incorrect email or password)

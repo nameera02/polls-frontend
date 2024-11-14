@@ -4,12 +4,16 @@ import { useState } from 'react';
 import classes from '../assets/css/Navbar.module.css';
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useDispatch ,useSelector} from 'react-redux';
+import { logout } from '../store/authSlice';
 
 function NavBar() {
-  const isLoggedIn = Boolean(localStorage.getItem('token'));
   const navigate = useNavigate();
+  // const [isLoggedIn, setisLoggedIn] = useState(false);
   const [userInfo, setuserInfo] = useState([]);
+  const dispatch = useDispatch();
     const toast = useToast();
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   function UserMenu() {    
     const token = localStorage.getItem('token');
   
@@ -32,6 +36,7 @@ function NavBar() {
       duration: 2000,
       isClosable: true,
     });
+    dispatch(logout());
     navigate('/login');
   };
   return (
@@ -53,7 +58,7 @@ function NavBar() {
           <Button as={RouterLink} className={classes['nav_btn']} to="/polls" colorScheme="teal" variant="ghost">
             Polls
           </Button>
-          {userInfo && (
+          {isLoggedIn ? (
         <Menu>
           <MenuButton as={Button} variant="ghost">
             <Avatar name={userInfo.name} size="sm" />
@@ -66,7 +71,17 @@ function NavBar() {
             </MenuItem>
           </MenuList>
         </Menu>
-      )}
+      ):(
+      <>
+      <Button as={RouterLink} className={classes['nav_btn']} to="/login" colorScheme="teal" variant="ghost">
+        Login
+      </Button>
+      <Button as={RouterLink} className={classes['nav_btn']} to="/register" colorScheme="teal" variant="ghost">
+        Register
+      </Button>
+      </>
+      )
+    }
         </HStack>
       </Flex>
     </Box>
